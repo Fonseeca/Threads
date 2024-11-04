@@ -1,31 +1,24 @@
 package Atividade03;
 
 public class Ímpares implements Runnable {
-    @Override
-    synchronized public void run(boolean ímparEstáExecutando){
-        boolean horaDoÍmpar;
-        int ímpar = 1;
+    private final Object lock;
+    int ímpar = 1;
 
+    public Ímpares(Object lock){
+        this.lock = lock;
+    }
 
-        if(ímparEstáExecutando == false){
-            horaDoÍmpar = true;
-            notify();
-            return;
-        }
-
-
-        ímparEstáExecutando = true;
-        notify();
-
-        try{
-            while (ímparEstáExecutando){
+    public void run(){
+        synchronized (lock){
+            try {
                 System.out.println(ímpar);
                 ímpar += 2;
-
-                wait();
+                lock.notify();
+                lock.wait();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
-        } catch (InterruptedException e){
-            System.out.println("Erro no sistema!");
         }
+
     }
 }

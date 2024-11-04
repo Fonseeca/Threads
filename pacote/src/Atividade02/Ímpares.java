@@ -15,7 +15,7 @@ public class Ímpares implements Runnable {
 
                 ímpar += 2;
             } catch (InterruptedException e){
-                System.out.println("Falha no sistema!");
+                throw new RuntimeException(e);
             }
         }
     }

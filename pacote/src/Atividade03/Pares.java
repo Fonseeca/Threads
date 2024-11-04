@@ -1,31 +1,24 @@
 package Atividade03;
 
-public class Pares implements Runnable {
-    @Override
-    synchronized public void run(boolean parEstáExecutando){
-        boolean horaDoPar;
-        int par = 0;
+public class Pares implements Runnable{
+    private final Object lock;
+    int par = 0;
 
+    public Pares(Object lock){
+        this.lock = lock;
+    }
 
-        if(parEstáExecutando == false){
-            horaDoPar = true;
-            notify();
-            return;
-        }
-
-
-        parEstáExecutando = true;
-        notify();
-
-        try{
-            while (parEstáExecutando){
+    public void run(){
+        synchronized (lock){
+            try {
                 System.out.println(par);
                 par += 2;
-
-                wait();
+                lock.notify();
+                lock.wait();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
-        } catch (InterruptedException e){
-            System.out.println("Erro no sistema!");
         }
+
     }
 }
